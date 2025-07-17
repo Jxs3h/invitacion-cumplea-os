@@ -378,14 +378,14 @@
     </div>
 
     <!-- Elemento de Audio (solo uno, sin autoplay ni muted inicial) -->
-    <audio id="invitationAudio" src="invitacion.mp3" preload="auto"></audio>
+    <audio id="invitationAudio" src="invitacion.mp3" preload="auto" muted></audio>
 
     <!-- EmailJS CDN -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
        (function(){
           emailjs.init({
-            publicKey: "TU_PUBLIC_KEY_DE_EMAILJS", // ¡REEMPLAZA ESTO CON TU CLAVE PÚBLICA DE EMAILJS!
+            publicKey: "4HZwhYtNhy6taZsKx",
           });
        })();
     </script>
@@ -410,7 +410,8 @@
                     // Habilita el scroll del body una vez que la invitación es visible
                     document.body.style.overflow = 'auto';
 
-                    // Intenta reproducir el audio
+                    // Intenta reproducir el audio (primero muted para activar permisos)
+                    invitationAudio.muted = false;
                     invitationAudio.play().catch(error => {
                         console.log("La reproducción automática de audio fue bloqueada:", error);
                         // Si el navegador bloquea el autoplay, muestra un botón para que el usuario lo reproduzca
@@ -449,22 +450,22 @@
             // Parámetros para EmailJS
             const templateParams = {
                 from_name: nombre,
-                to_email: 'tu_correo@ejemplo.com', // ¡REEMPLAZA ESTO CON TU CORREO ELECTRÓNICO!
+                to_email: 'jburgos.y@gmail.com',
                 message: `Confirmación: ${nombre} asistirá a la celebración del cumpleaños el 26 de Julio`,
             };
 
             // Envía el correo usando EmailJS
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams) // ¡REEMPLAZA ESTO CON TUS IDs DE SERVICIO Y PLANTILLA DE EMAILJS!
+            emailjs.send('service_invitacion', 'template_dwx9x5c', templateParams)
                 .then(function(response) {
                     console.log('Correo enviado con éxito!', response.status, response.text);
                     mensajeConfirmacion.textContent = `¡Gracias ${nombre}! Tu asistencia ha sido confirmada.`;
                     mensajeConfirmacion.style.display = 'block';
                     mensajeConfirmacion.style.color = '#2b6cb0';
                     confirmButton.textContent = 'Asistencia Confirmada';
-                    // Opcional: Reproducir un sonido de confirmación si tienes un archivo 'confirmacion.mp3'
-                    // try {
-                    //     new Audio('confirmacion.mp3').play();
-                    // } catch(e) { console.log('No se pudo reproducir el sonido de confirmación', e); }
+                    // Reproducir sonido de confirmación
+                    try {
+                        new Audio('confirmacion.mp3').play();
+                    } catch(e) { console.log('No se pudo reproducir el sonido de confirmación', e); }
                 }, function(error) {
                     console.error('Error al enviar el correo:', error);
                     mensajeConfirmacion.textContent = `Lo siento, hubo un error al confirmar tu asistencia. Intenta de nuevo.`;
@@ -477,4 +478,5 @@
     </script>
 </body>
 </html>
+
 
