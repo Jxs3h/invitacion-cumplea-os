@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Especial de Cumpleaños</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#d1e3f8 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow: hidden; /* Oculta el scroll si la invitación es más grande que la pantalla */
+        }
+
+        /* Estilos para la pantalla de inicio */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%); /* Fondo similar al header */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Asegura que esté por encima de todo */
+            color: white;
+            text-align: center;
+            transition: opacity 0.5s ease-out; /* Transición suave al desaparecer */
+        }
+
+        #splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none; /* Permite hacer clic a través de ella cuando está oculta */
+        }
+
+        #splash-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        #splash-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        #splash-button {
+            background: white;
+            color: #2b6cb0;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #splash-button:hover {
+            background: #ebf8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Estilos de la invitación (ya existentes) */
+        .invitation-container {
+            max-width: 650px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.15);
+            overflow: hidden;
+            margin: 20px;
+            position: relative;
+            border: 8px solid #ebf8ff;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            /* Inicialmente oculta la invitación */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in, visibility 0.5s ease-in;
+        }
+
+        .invitation-container.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            color: white;
+            font-size: 2.8rem;
+            margin: 15px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .invitation-message {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            padding: 40px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            animation: textFocus 1.5s ease-out;
+        }
+
+        .invitation-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2b6cb0;
+            margin-bottom: 30px;
+        }
+
+        .dates-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px auto;
+            flex-wrap: wrap;
+        }
+
+        .date-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+            min-width: 200px;
+            border: 2px solid #ebf8ff;
+            transition: transform 0.3s ease;
+        }
+
+        .date-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .date-type {
+            font-size: 1rem;
+            color: #2b6cb0;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .date-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2b6cb0;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+            margin-top: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #2b6cb0;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #ebf8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #bfdbfe;
+            }
+            to {
+                text-shadow: 0 0 15px #93c5fd;
+            }
+        }
+
+        @keyframes textFocus {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-5px) scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .invitation-text {
+                font-size: 1.2rem;
+            }
+
+            .dates-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            #splash-screen h1 {
+                font-size: 2.5rem;
+            }
+            #splash-screen p {
+                font-size: 1rem;
+            }
+            #splash-button {
+                font-size: 1rem;
+                padding: 12px 30px;
+            }
+        }
+
+        .form-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #2b6cb0;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .form-button {
+            background: #2b6cb0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .form-button:hover {
+            background: #3182ce;
+        }
+
+        #mensaje-confirmacion {
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Inicio -->
+    <div id="splash-screen">
+        <h1>¡Tienes una Invitación Especial!</h1>
+        <p>Haz clic para descubrirla</p>
+        <button id="splash-button">Ver Invitación</button>
+    </div>
+
+    <!-- Contenedor de la Invitación (inicialmente oculto) -->
+    <div class="invitation-container floating">
+        <div class="header">
+            <h1 class="title">¡Estás Cordialmente Invitado!</h1>
+        </div>
+
+        <div class="invitation-message">
+            <p class="text-lg mb-8">¡Hola, te esperamos en esta celebración muy especial!</p>
+
+            <div class="invitation-text">
+                "¡Qué tal!<br>
+                <br>
+                Tengo el agrado de invitarte a la celebración de mi cumpleaños,<br>
+                el día sábado 26 de Julio 2025 a las 20:00.<br>
+                <br>
+                ¡Espero que puedas asistir! <span style="font-size: 1.8em; display: inline-block; animation: bounce 0.5s infinite alternate; color: initial;">🥳🥳🥳</span>"
+            </div>
+
+            <div class="dates-container">
+                <div class="date-card">
+                    <div class="date-type">Día Real</div>
+                    <div class="date-value">Jueves 24</div>
+                </div>
+
+                <div class="date-card">
+                    <div class="date-type">Celebración</div>
+                    <div class="date-value">Sábado 26</div>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <input type="text" id="nombre" class="form-input" placeholder="Tu nombre" required>
+                <br>
+                <button onclick="confirmarAsistencia()" class="form-button">Confirmar Asistencia</button>
+                <p id="mensaje-confirmacion" style="display:none; color:#2b6cb0; margin-top:10px;"></p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="text-white text-lg">No faltes, ¡será increíble!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('splash-screen');
+            const splashButton = document.getElementById('splash-button');
+            const invitationContainer = document.querySelector('.invitation-container');
+
+            splashButton.addEventListener('click', function() {
+                // Oculta la pantalla de inicio
+                splashScreen.classList.add('hidden');
+
+                // Muestra la invitación después de un breve retraso para la transición
+                setTimeout(() => {
+                    invitationContainer.classList.add('visible');
+                    // Opcional: Si la invitación tiene animaciones que deben empezar al ser visible,
+                    // podrías dispararlas aquí.
+                }, 500); // Coincide con la duración de la transición de opacidad
+            });
+        });
+
+        function confirmarAsistencia() {
+            const nombre = document.getElementById('nombre').value;
+
+            if (!nombre) {
+                alert('Por favor ingresa tu nombre');
+                return;
+            }
+
+            // Simular envío de correo
+            const mensaje = `Confirmación: ${nombre} asistirá a la celebración del cumpleaños el 26 de Julio`;
+            console.log('Email enviado:', mensaje);
+
+            // Mostrar confirmación
+            document.getElementById('mensaje-confirmacion').textContent =
+                `¡Gracias ${nombre}! Tu asistencia ha sido confirmada.`;
+            document.getElementById('mensaje-confirmacion').style.display = 'block';
+
+            // Opcional: Aquí podrías añadir código para enviar realmente el email usando un servicio como EmailJS
+        }
+    </script>
+</body>
+</html>
