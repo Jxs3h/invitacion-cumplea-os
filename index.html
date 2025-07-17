@@ -60,11 +60,8 @@
         </div>
     </div>
 
-    <!-- Elemento de Audio -->
-    <audio id="invitationAudio" src="invitacion.mp3" preload="auto" autoplay muted></audio>
-
-    <!-- Elemento de Audio -->
-    <audio id="invitationAudio" src="invitacion.mp3" preload="auto"></audio>
+    <!-- Un solo elemento de audio optimizado para autoplay -->
+    <audio id="invitationAudio" src="invitacion.mp3" preload="auto" muted></audio>
 
     <!-- EmailJS CDN -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -84,20 +81,47 @@
             document.body.style.overflow = 'hidden'; // Oculta el scroll del body mientras la splash está activa
 
             splashButton.addEventListener('click', function() {
-                // Oculta la pantalla de inicio
-                splashScreen.classList.add('hidden');
-                
-                // Intenta reproducir el audio cuando se muestre la invitación
-                setTimeout(() => {
-                    document.getElementById('invitationAudio').play().catch(e => {
-                        console.log("Audio blocked, needs user interaction:", e);
-                        const playButton = document.createElement('button');
-                        playButton.textContent = '▶ Reproducir mensaje';
-                        playButton.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg mt-4';
-                        playButton.onclick = () => document.getElementById('invitationAudio').play();
-                        document.querySelector('.invitation-message').append(playButton);
-                    });
-                }, 500);
+                // 1. Primero hacer play() silenciado para activar permisos
+                const audio = document.getElementById('invitationAudio');
+                audio.play().then(() => {
+                    // 2. Si se pudo iniciar, pausamos y quitamos mute
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.muted = false;
+                    
+                    // 3. Oculta la pantalla de inicio
+                    splashScreen.classList.add('hidden');
+                    
+                    // 4. Intentar reproducir completo al mostrar invitación
+                    setTimeout(() => {
+                        audio.play().catch(e => {
+                            console.log("Audio bloqueado. Mostrando botón...");
+                            const playButton = document.createElement('button');
+                            playButton.textContent = '▶ Haz clic para escuchar el mensaje';
+                            playButton.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-blue-700 cursor-pointer';
+                            playButton.onclick = () => {
+                                audio.play();
+                                playButton.remove();
+                            };
+                            document.querySelector('.invitation-message').prepend(playButton);
+                        });
+                    }, 500);
+                }).catch(e => {
+                    console.log("Autoplay no permitido inicialmente");
+                    splashScreen.classList.add('hidden');
+                    
+                    const audio = document.getElementById('invitationAudio');
+                    audio.muted = false;
+                    
+                    const playButton = document.createElement('button');
+                    playButton.textContent = '🔊 Haz clic para escuchar la invitación';
+                    playButton.className = 'bg-blue Hermoso texto-white px-6 py-3 rounded-xl mt-6 text-lg font-semibold';
+                    playButton.onclick = () => {
+                        audio.play();
+                        playButton.remove();
+                    };
+                    document.querySelector('.invitation-message').prepend(playButton);
+                });
 
                 // Muestra la invitación después de un breve retraso para la transición
                 setTimeout(() => {
