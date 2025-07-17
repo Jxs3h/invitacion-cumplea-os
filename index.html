@@ -6,7 +6,324 @@
     <title>Invitación Especial de Cumpleaños</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Aquí va tu CSS existente */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#d1e3f8 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Estilos para la pantalla de inicio */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+            transition: opacity 0.5s ease-out;
+            overflow: hidden;
+        }
+
+        #splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #splash-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        #splash-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        #splash-button {
+            background: white;
+            color: #2b6cb0;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #splash-button:hover {
+            background: #ebf8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Estilos de la invitación (ya existentes) */
+        .invitation-container {
+            max-width: 650px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.15);
+            overflow: hidden;
+            margin: 20px;
+            position: relative;
+            border: 8px solid #ebf8ff;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in, visibility 0.5s ease-in;
+            position: relative;
+            z-index: 1;
+        }
+
+        .invitation-container.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            color: white;
+            font-size: 2.8rem;
+            margin: 15px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .invitation-message {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            padding: 40px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            animation: textFocus 1.5s ease-out;
+        }
+
+        .invitation-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2b6cb0;
+            margin-bottom: 30px;
+        }
+
+        .dates-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px auto;
+            flex-wrap: wrap;
+        }
+
+        .date-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+            min-width: 200px;
+            border: 2px solid #ebf8ff;
+            transition: transform 0.3s ease;
+        }
+
+        .date-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .date-type {
+            font-size: 1rem;
+            color: #2b6cb0;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .date-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2b6cb0;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+            margin-top: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #2b6cb0;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #ebf8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #bfdbfe;
+            }
+            to {
+                text-shadow: 0 0 15px #93c5fd;
+            }
+        }
+
+        @keyframes textFocus {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-5px) scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .invitation-text {
+                font-size: 1.2rem;
+            }
+
+            .dates-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            #splash-screen h1 {
+                font-size: 2.5rem;
+            }
+            #splash-screen p {
+                font-size: 1rem;
+            }
+            #splash-button {
+                font-size: 1rem;
+                padding: 12px 30px;
+            }
+        }
+
+        .form-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #2b6cb0;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .form-button {
+            background: #2b6cb0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .form-button:hover {
+            background: #3182ce;
+        }
+
+        #mensaje-confirmacion {
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Estilos para el botón de audio si es necesario */
+        .audio-play-button {
+            display: inline-block;
+            background: #2b6cb0; /* Color similar a los botones existentes */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px; /* Bordes redondeados como otros botones */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px; /* Espacio superior */
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .audio-play-button:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -17,7 +334,7 @@
         <button id="splash-button">Ver Invitación</button>
     </div>
 
-    <!-- Contenedor de la Invitación -->
+    <!-- Contenedor de la Invitación (inicialmente oculto) -->
     <div class="invitation-container floating">
         <div class="header">
             <h1 class="title">¡Estás Cordialmente Invitado!</h1>
@@ -60,14 +377,16 @@
         </div>
     </div>
 
-    <!-- Un solo elemento de audio optimizado para autoplay -->
-    <audio id="invitationAudio" src="invitacion.mp3" preload="auto" muted></audio>
+    <!-- Elemento de Audio (solo uno, sin autoplay ni muted inicial) -->
+    <audio id="invitationAudio" src="invitacion.mp3" preload="auto"></audio>
 
     <!-- EmailJS CDN -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
        (function(){
-          emailjs.init("TU_PUBLIC_KEY_DE_EMAILJS"); // Reemplaza con tu Public Key
+          emailjs.init({
+            publicKey: "TU_PUBLIC_KEY_DE_EMAILJS", // ¡REEMPLAZA ESTO CON TU CLAVE PÚBLICA DE EMAILJS!
+          });
        })();
     </script>
 
@@ -78,77 +397,36 @@
             const invitationContainer = document.querySelector('.invitation-container');
             const invitationAudio = document.getElementById('invitationAudio');
 
-            document.body.style.overflow = 'hidden'; // Oculta el scroll del body mientras la splash está activa
+            // Oculta el scroll del body mientras la splash está activa
+            document.body.style.overflow = 'hidden';
 
             splashButton.addEventListener('click', function() {
-                // 1. Primero hacer play() silenciado para activar permisos
-                const audio = document.getElementById('invitationAudio');
-                audio.play().then(() => {
-                    // 2. Si se pudo iniciar, pausamos y quitamos mute
-                    audio.pause();
-                    audio.currentTime = 0;
-                    audio.muted = false;
-                    
-                    // 3. Oculta la pantalla de inicio
-                    splashScreen.classList.add('hidden');
-                    
-                    // 4. Intentar reproducir completo al mostrar invitación
-                    setTimeout(() => {
-                        audio.play().catch(e => {
-                            console.log("Audio bloqueado. Mostrando botón...");
-                            const playButton = document.createElement('button');
-                            playButton.textContent = '▶ Haz clic para escuchar el mensaje';
-                            playButton.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-blue-700 cursor-pointer';
-                            playButton.onclick = () => {
-                                audio.play();
-                                playButton.remove();
-                            };
-                            document.querySelector('.invitation-message').prepend(playButton);
-                        });
-                    }, 500);
-                }).catch(e => {
-                    console.log("Autoplay no permitido inicialmente");
-                    splashScreen.classList.add('hidden');
-                    
-                    const audio = document.getElementById('invitationAudio');
-                    audio.muted = false;
-                    
-                    const playButton = document.createElement('button');
-                    playButton.textContent = '🔊 Haz clic para escuchar la invitación';
-                    playButton.className = 'bg-blue Hermoso texto-white px-6 py-3 rounded-xl mt-6 text-lg font-semibold';
-                    playButton.onclick = () => {
-                        audio.play();
-                        playButton.remove();
-                    };
-                    document.querySelector('.invitation-message').prepend(playButton);
-                });
+                // Oculta la pantalla de inicio
+                splashScreen.classList.add('hidden');
 
                 // Muestra la invitación después de un breve retraso para la transición
                 setTimeout(() => {
                     invitationContainer.classList.add('visible');
-                    document.body.style.overflow = 'auto'; // Habilita el scroll del body
+                    // Habilita el scroll del body una vez que la invitación es visible
+                    document.body.style.overflow = 'auto';
 
                     // Intenta reproducir el audio
-                    setTimeout(() => {
-                        invitationAudio.muted = false; // Quitamos el mute después de iniciar
-                        invitationAudio.play().catch(error => {
-                            console.log("La reproducción automática de audio fue bloqueada:", error);
-                            // Mostrar instrucción clara para el usuario
-                            const audioButton = document.createElement('button');
-                            audioButton.textContent = '🔊 Hacer clic para reproducir audio';
-                            audioButton.style.margin = '10px 0';
-                            audioButton.style.padding = '8px 15px';
-                            audioButton.style.borderRadius = '10px';
-                            audioButton.style.backgroundColor = '#2b6cb0';
-                            audioButton.style.color = 'white';
-                            audioButton.style.border = 'none';
-                            audioButton.onclick = () => {
-                                invitationAudio.play();
-                                audioButton.remove();
-                            };
-                            document.querySelector('.invitation-message').appendChild(audioButton);
-                        });
-                    }, 300);
+                    invitationAudio.play().catch(error => {
+                        console.log("La reproducción automática de audio fue bloqueada:", error);
+                        // Si el navegador bloquea el autoplay, muestra un botón para que el usuario lo reproduzca
+                        const playButton = document.createElement('button');
+                        playButton.textContent = '🔊 Haz clic para escuchar la invitación';
+                        playButton.className = 'audio-play-button'; // Usa la clase CSS para el estilo
+                        playButton.style.display = 'block'; // Para que ocupe su propia línea
+                        playButton.style.margin = '20px auto'; // Centrar el botón
+
+                        playButton.onclick = () => {
+                            invitationAudio.play();
+                            playButton.remove(); // Elimina el botón una vez que se reproduce el audio
+                        };
+                        // Inserta el botón antes del formulario de confirmación
+                        document.querySelector('.form-container').parentNode.insertBefore(playButton, document.querySelector('.form-container'));
+                    });
 
                 }, 500); // Coincide con la duración de la transición de opacidad
             });
@@ -171,22 +449,22 @@
             // Parámetros para EmailJS
             const templateParams = {
                 from_name: nombre,
-                to_email: 'tu_correo@ejemplo.com', // Reemplaza con tu correo
+                to_email: 'tu_correo@ejemplo.com', // ¡REEMPLAZA ESTO CON TU CORREO ELECTRÓNICO!
                 message: `Confirmación: ${nombre} asistirá a la celebración del cumpleaños el 26 de Julio`,
             };
 
             // Envía el correo usando EmailJS
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams) // ¡REEMPLAZA ESTO CON TUS IDs DE SERVICIO Y PLANTILLA DE EMAILJS!
                 .then(function(response) {
                     console.log('Correo enviado con éxito!', response.status, response.text);
                     mensajeConfirmacion.textContent = `¡Gracias ${nombre}! Tu asistencia ha sido confirmada.`;
                     mensajeConfirmacion.style.display = 'block';
                     mensajeConfirmacion.style.color = '#2b6cb0';
                     confirmButton.textContent = 'Asistencia Confirmada';
-                    // Play confirmation sound if needed
-                    try {
-                        new Audio('confirmacion.mp3').play();
-                    } catch(e) { console.log('Could not play confirmation sound', e); }
+                    // Opcional: Reproducir un sonido de confirmación si tienes un archivo 'confirmacion.mp3'
+                    // try {
+                    //     new Audio('confirmacion.mp3').play();
+                    // } catch(e) { console.log('No se pudo reproducir el sonido de confirmación', e); }
                 }, function(error) {
                     console.error('Error al enviar el correo:', error);
                     mensajeConfirmacion.textContent = `Lo siento, hubo un error al confirmar tu asistencia. Intenta de nuevo.`;
@@ -199,3 +477,4 @@
     </script>
 </body>
 </html>
+
